@@ -1,5 +1,5 @@
  
-## Load and process the data
+## Loading and processing the data
 ##### 1. Load the data 
 
 ```{r, echo=TRUE, results='hide', warning=FALSE, message=FALSE}
@@ -16,8 +16,8 @@ unzip("repdata%2Fdata%2Factivity.zip",exdir = "data")
 activity_data <- data.table::fread(input = "data/activity.csv")
 ```
 
-#What is mean total number of steps taken per day?
-##1.Calculate the total number of steps taken per day
+##What is mean total number of steps taken per day?
+###1.Calculate the total number of steps taken per day
 
 ```{r}
 Total_Steps <- activity_data[, c(lapply(.SD, sum, na.rm = FALSE)), .SDcols = c("steps"), by = .(date)] 
@@ -25,7 +25,7 @@ Total_Steps <- activity_data[, c(lapply(.SD, sum, na.rm = FALSE)), .SDcols = c("
 head(Total_Steps, 10)
 ```
 
-## 1. Histogram of the total number of steps taken each day
+### 1. Histogram of the total number of steps taken each day
 
 ```{r}
 ggplot(Total_Steps, aes(x = steps)) +
@@ -35,7 +35,7 @@ ggplot(Total_Steps, aes(x = steps)) +
 
 
 
-## 2. Mean and median total number of steps taken per day
+### 2. Mean and median total number of steps taken per day
 
 ```{r}
 Total_Steps[, .(Mean_Steps = mean(steps, na.rm = TRUE), Median_Steps = median(steps, na.rm = TRUE))]
@@ -43,7 +43,7 @@ Total_Steps[, .(Mean_Steps = mean(steps, na.rm = TRUE), Median_Steps = median(st
 
 -----
 
-# Average daily activity pattern - steps pattern for each 5 minutes
+## What is the average daily activity pattern?
 
 ```{r}
 IntervalDT <- activity_data[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("steps"), by = .(interval)] 
@@ -51,7 +51,7 @@ IntervalDT <- activity_data[, c(lapply(.SD, mean, na.rm = TRUE)), .SDcols = c("s
 ggplot(IntervalDT, aes(x = interval , y = steps)) + geom_line(color="blue", size=1) + labs(title = "Avg. Daily Steps", x = "Interval", y = "Avg. Steps per day")
 ```
 
-## 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps
+### 5-minute interval, on average across all the days in the dataset, contains the maximum number of steps
 
 ```{r}
 IntervalDT[steps == max(steps), .(max_interval = interval)]
@@ -59,8 +59,8 @@ IntervalDT[steps == max(steps), .(max_interval = interval)]
 
 ----
 
-# Missing values
-## 1. The total number of missing values in the dataset 
+## Imputing missing values
+### 1. The total number of missing values in the dataset 
 
 ```{r}
 activity_data[is.na(steps), .N ]
@@ -93,7 +93,7 @@ Total_Steps[, .(Mean_Steps = mean(steps), Median_Steps = median(steps))]
 
 ----
 
-# Are there differences in activity patterns between weekdays and weekends?
+## Are there differences in activity patterns between weekdays and weekends?
 ## 1. Create a new factor variable in the dataset with two levels for Weekday or Weekend
 
 ```{r}
